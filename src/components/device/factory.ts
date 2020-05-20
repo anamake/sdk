@@ -5,10 +5,14 @@ import IDeviceManager from './../../interfaces/iDeviceManager';
 import IDeviceFactory from './../../interfaces/iDeviceFactory';
 import HuddlyGo from './huddlygo';
 import Boxfish from './boxfish';
+import Dwarffish from './dwarffish';
+import Clownfish from './clownfish';
 import { EventEmitter } from 'events';
 
 export const HUDDLY_GO_PID = 0x11;
 export const HUDDLY_BOXFISH_PID = 0x21;
+export const HUDDLY_CLOWNFISH_PID = 0x31;
+export const HUDDLY_DWARFFISH_PID = 0x51;
 
 export function createFactory(): IDeviceFactory {
   return DeviceFactory;
@@ -167,8 +171,14 @@ export default class DeviceFactory {
         const hidApi = await this.getHIDInterface(devInstance, preferredDeviceApi, secondaryDeviceApis, logger);
         device = new HuddlyGo(devInstance, transport, uvcControlInterface, hidApi, logger, cameraDiscoveryEmitter);
         break;
+      case HUDDLY_CLOWNFISH_PID:
+        device = new Clownfish(devInstance, transport, uvcControlInterface, logger, cameraDiscoveryEmitter);
+        break;
       case HUDDLY_BOXFISH_PID:
         device = new Boxfish(devInstance, transport, uvcControlInterface, logger, cameraDiscoveryEmitter);
+        break;
+      case HUDDLY_DWARFFISH_PID:
+        device = new Dwarffish(devInstance, transport, uvcControlInterface, logger, cameraDiscoveryEmitter);
         break;
       default:
         throw new Error(`Unsupported Device. USB ProductId: ${productId}`);
